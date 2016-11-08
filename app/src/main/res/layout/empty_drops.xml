@@ -28,6 +28,7 @@
         android:paddingRight="60dp"
         android:paddingTop="8dp"
         android:text="Add a Drop"
+        android:onClick="addDropButton"
         android:textAllCaps="false"
         android:textColor="@color/btn_add_color"
         android:textSize="28sp" />
