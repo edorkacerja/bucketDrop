@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/row_drop_layout"
+    android:orientation="horizontal">
+    
+    <ImageView
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:src="@drawable/ic_place"
+        android:layout_margin="22dp"/>
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/recycler_drop_name"
+        android:layout_gravity="center"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:text="Date"
+        android:layout_marginRight="22dp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2" />
+
+
+</LinearLayout>
