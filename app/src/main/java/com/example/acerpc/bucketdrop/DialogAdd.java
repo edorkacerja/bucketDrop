@@ -14,7 +14,6 @@ import android.widget.ImageButton;
 import com.example.acerpc.bucketdrop.beans.Drop;
 
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 /**
  * Created by AcerPC on 11/8/2016.
@@ -62,9 +61,6 @@ public class DialogAdd extends DialogFragment implements View.OnClickListener {
     private void addDrop() {
         long timeCreated = System.currentTimeMillis();
 
-        Realm.init(getActivity());
-        RealmConfiguration rc = new RealmConfiguration.Builder().build();
-        Realm.setDefaultConfiguration(rc);
         Realm realm = Realm.getDefaultInstance();
 
         Drop myDrop = new Drop(false, dropName.getText().toString(), timeCreated, 0);

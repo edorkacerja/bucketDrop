@@ -18,12 +18,15 @@
         android:scaleType="centerCrop"
         android:src="@drawable/background" />
 
-    <include layout="@layout/empty_drops" />
+    <include
+        android:id="@+id/empty_drops"
+        layout="@layout/empty_drops" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view"
-        android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buton_add"
+        android:layout_below="@+id/toolbar" />
 
 </RelativeLayout>
