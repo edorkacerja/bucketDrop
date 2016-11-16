@@ -18,7 +18,7 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
     Toolbar toolbar;
     ImageView backgroundImage;
     BucketRecyclerView myRecyclerView;
@@ -96,7 +96,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void addDropButton(View view) {
         DialogAdd myDialog = new DialogAdd();
-        Log.d(myAdapter.TAG, "addDropButton: CLICKEEDDDDDDDD");
         myDialog.show(myFragmentManager, "Add Dialog");
     }
+
+
 }

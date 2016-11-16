@@ -89,13 +89,15 @@ public class myAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
 
-    class myFooterViewHolder extends RecyclerView.ViewHolder {
+
+    class myFooterViewHolder extends RecyclerView.ViewHolder{
         private Button myButton;
 
         public myFooterViewHolder(View itemView) {
             super(itemView);
             myButton = (Button) itemView.findViewById(R.id.btn_footer_add);
         }
+
     }
 
 }

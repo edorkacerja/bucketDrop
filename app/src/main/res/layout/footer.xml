@@ -13,6 +13,7 @@
         android:background="@drawable/add_button_background"
         android:fontFamily="sans-serif-thin"
         android:paddingBottom="8dp"
+        android:onClick="addDropButton"
         android:paddingLeft="60dp"
         android:paddingRight="60dp"
         android:paddingTop="8dp"
