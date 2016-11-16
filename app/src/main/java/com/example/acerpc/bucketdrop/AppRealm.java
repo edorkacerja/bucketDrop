@@ -9,11 +9,15 @@ import io.realm.RealmConfiguration;
  * Created by AcerPC on 11/15/2016.
  */
 
+
+// ----- Class which sets the default Realm configurations while the app is running -----
+
 public class AppRealm extends Application {
 
     @Override
     public void onCreate() {
         super.onCreate();
+
 
         Realm.init(this);
         RealmConfiguration rc = new RealmConfiguration.Builder().build();

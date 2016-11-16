@@ -23,11 +23,15 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.myViewHolder> {
     public static final String TAG = "Edor";
     private RealmResults<Drop> myResults;
     myViewHolder myHolder;
+
+
     public myAdapter (Context context, RealmResults<Drop> results){
         myLayoutInflater = LayoutInflater.from(context);
         updateResults(results);
     }
 
+
+    //---------- method triggered when a change to the database is made ----------
     public void updateResults(RealmResults<Drop> newResults){
         myResults = newResults;
         notifyDataSetChanged();
@@ -45,7 +49,6 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.myViewHolder> {
         Log.d(TAG, "onBindViewHolder: position - " + position);
         Drop myDrop = myResults.get(position);
         myHolder.myTxtView.setText(myDrop.getGoal());
-
     }
 
     @Override
@@ -54,6 +57,8 @@ public class myAdapter extends RecyclerView.Adapter<myAdapter.myViewHolder> {
         return myResults.size();
     }
 
+
+    // ----------- my custom viewholder class -----------
     class myViewHolder extends RecyclerView.ViewHolder{
         private TextView myTxtView;
         public myViewHolder(View itemView){
