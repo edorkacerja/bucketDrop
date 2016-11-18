@@ -12,13 +12,14 @@ import android.widget.TextView;
 import com.example.acerpc.bucketdrop.R;
 import com.example.acerpc.bucketdrop.beans.Drop;
 
+import io.realm.Realm;
 import io.realm.RealmResults;
 
 /**
  * Created by AcerPC on 11/14/2016.
  */
 
-public class myAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class myAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements SwipeListener{
     public static final int ITEM = 0;
     public static final int FOOTER = 1;
     private LayoutInflater myLayoutInflater;
@@ -26,10 +27,11 @@ public class myAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private RealmResults<Drop> myResults;
     myItemViewHolder myItemHolder;
     myFooterViewHolder myFooterHolder;
+    Realm myRealm;
 
-
-    public myAdapter(Context context, RealmResults<Drop> results) {
+    public myAdapter(Context context, Realm realm, RealmResults<Drop> results) {
         myLayoutInflater = LayoutInflater.from(context);
+        myRealm = realm;
         updateResults(results);
     }
 
@@ -75,6 +77,15 @@ public class myAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public int getItemCount() {
         Log.d(TAG, "getItemCount: ");
         return myResults.size()+1;
+    }
+
+    @Override
+    public void onSwipe(int position) {
+        myRealm.beginTransaction();
+        myResults.get(position).deleteFromRealm();
+        myRealm.commitTransaction();
+        notifyDataSetChanged();
+        //notifyItemRemoved(position);
     }
 
 

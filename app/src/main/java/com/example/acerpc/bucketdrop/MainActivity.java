@@ -5,11 +5,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.example.acerpc.bucketdrop.adapters.SimpleTouchCallback;
 import com.example.acerpc.bucketdrop.adapters.myAdapter;
 import com.example.acerpc.bucketdrop.beans.Drop;
 import com.example.acerpc.bucketdrop.widgets.BucketRecyclerView;
@@ -63,11 +65,16 @@ public class MainActivity extends AppCompatActivity{
         // ----- Configure the Recycler View with and adapter and layout manager -----
         myRecyclerView.hideIfEmpty(toolbar);
         myRecyclerView.showIfEmpty(emptyView);
-        mAdapter = new myAdapter(this, resultz);
+        mAdapter = new myAdapter(this, realm, resultz);
         myRecyclerView.setAdapter(mAdapter);
         mLayoutManager = new LinearLayoutManager(this);
         myRecyclerView.setLayoutManager(mLayoutManager);
 
+
+        // ------ Initialize Swipe to delete ---------
+        SimpleTouchCallback mySimpleTouch = new SimpleTouchCallback(mAdapter);
+        ItemTouchHelper myItemTouchHelper = new ItemTouchHelper(mySimpleTouch);
+        myItemTouchHelper.attachToRecyclerView(myRecyclerView);
 
 
         setSupportActionBar(toolbar);
