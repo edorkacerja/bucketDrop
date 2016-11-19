@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.example.acerpc.bucketdrop.adapters.CompletedListener;
+import com.example.acerpc.bucketdrop.adapters.ItemClickListener;
 import com.example.acerpc.bucketdrop.adapters.SimpleTouchCallback;
 import com.example.acerpc.bucketdrop.adapters.myAdapter;
 import com.example.acerpc.bucketdrop.beans.Drop;
@@ -20,7 +22,7 @@ import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements ItemClickListener{
     Toolbar toolbar;
     ImageView backgroundImage;
     BucketRecyclerView myRecyclerView;
@@ -40,6 +42,15 @@ public class MainActivity extends AppCompatActivity{
             mAdapter.updateResults(resultz);
         }
     };
+
+
+    private CompletedListener myCompletedListener = new CompletedListener() {
+        @Override
+        public void onComplete(int position) {
+            mAdapter.markComplete(position);
+        }
+    };
+
 
 
     @Override
@@ -65,7 +76,7 @@ public class MainActivity extends AppCompatActivity{
         // ----- Configure the Recycler View with and adapter and layout manager -----
         myRecyclerView.hideIfEmpty(toolbar);
         myRecyclerView.showIfEmpty(emptyView);
-        mAdapter = new myAdapter(this, realm, resultz);
+        mAdapter = new myAdapter(this, realm, resultz, this);
         myRecyclerView.setAdapter(mAdapter);
         mLayoutManager = new LinearLayoutManager(this);
         myRecyclerView.setLayoutManager(mLayoutManager);
@@ -101,9 +112,21 @@ public class MainActivity extends AppCompatActivity{
         Glide.with(this).load(R.drawable.background).into(backgroundImage);
     }
 
+
+
+    // ----------------- Show Dialog Fragments ------------------
     public void addDropButton(View view) {
         DialogAdd myDialog = new DialogAdd();
         myDialog.show(myFragmentManager, "Add Dialog");
+    }
+
+    public void showDialogMarkComplete(int position){
+        DialogMark myMarkDialog = new DialogMark();
+        myMarkDialog.setCompletedListener(myCompletedListener);
+        Bundle myBundle = new Bundle();
+        myBundle.putInt("POSITION", position);
+        myMarkDialog.setArguments(myBundle);
+        myMarkDialog.show(myFragmentManager, "Mark Complete?");
     }
 
 

@@ -1,8 +1,9 @@
 package com.example.acerpc.bucketdrop.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.acerpc.bucketdrop.R;
 import com.example.acerpc.bucketdrop.beans.Drop;
+import com.example.acerpc.bucketdrop.extras.Util;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -19,7 +21,7 @@ import io.realm.RealmResults;
  * Created by AcerPC on 11/14/2016.
  */
 
-public class myAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements SwipeListener{
+public class myAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements SwipeListener {
     public static final int ITEM = 0;
     public static final int FOOTER = 1;
     private LayoutInflater myLayoutInflater;
@@ -28,11 +30,13 @@ public class myAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
     myItemViewHolder myItemHolder;
     myFooterViewHolder myFooterHolder;
     Realm myRealm;
+    ItemClickListener myClickListener;
 
-    public myAdapter(Context context, Realm realm, RealmResults<Drop> results) {
+    public myAdapter(Context context, Realm realm, RealmResults<Drop> results, ItemClickListener listener) {
         myLayoutInflater = LayoutInflater.from(context);
         myRealm = realm;
         updateResults(results);
+        myClickListener = listener;
     }
 
 
@@ -63,20 +67,23 @@ public class myAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if(holder instanceof myItemViewHolder){
+        if (holder instanceof myItemViewHolder) {
             myItemHolder = (myItemViewHolder) holder;
             Drop myDrop = myResults.get(position);
             myItemHolder.myTxtView.setText(myDrop.getGoal());
-        }else{
-            //do nothing
+            myItemHolder.setBackgroud(myDrop.isCompleted());
         }
 
     }
 
     @Override
     public int getItemCount() {
-        Log.d(TAG, "getItemCount: ");
-        return myResults.size()+1;
+
+        if (myResults == null) {
+            return 0;
+        } else {
+            return myResults.size() + 1;
+        }
     }
 
     @Override
@@ -88,20 +95,46 @@ public class myAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
         //notifyItemRemoved(position);
     }
 
+    public void markComplete(int position) {
+        myRealm.beginTransaction();
+        myResults.get(position).setCompleted(true);
+        myRealm.commitTransaction();
+        notifyDataSetChanged();
+    }
+
 
     // ----------- my custom viewholder class -----------
-    class myItemViewHolder extends RecyclerView.ViewHolder {
+    private class myItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView myTxtView;
+        Context context;
+        View myItemView;
 
-        public myItemViewHolder(View itemView) {
+        myItemViewHolder(View itemView) {
             super(itemView);
+            context = itemView.getContext();
             myTxtView = (TextView) itemView.findViewById(R.id.recycler_drop_name);
+            itemView.setOnClickListener(this);
+            myItemView = itemView;
+        }
+
+        @Override
+        public void onClick(View v) {
+            myClickListener.showDialogMarkComplete(getAdapterPosition());
+        }
+
+        void setBackgroud(boolean completed) {
+            Drawable myDrawable;
+            if (completed) {
+                myDrawable = ContextCompat.getDrawable(context, R.color.bg_drop_completed);
+            } else {
+                myDrawable = ContextCompat.getDrawable(context, R.drawable.row_drop_layout);
+            }
+            Util.setBackgroud(myItemView, myDrawable);
         }
     }
 
 
-
-    class myFooterViewHolder extends RecyclerView.ViewHolder{
+    class myFooterViewHolder extends RecyclerView.ViewHolder {
         private Button myButton;
 
         public myFooterViewHolder(View itemView) {
