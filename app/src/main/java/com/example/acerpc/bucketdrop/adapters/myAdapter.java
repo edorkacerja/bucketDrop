@@ -42,7 +42,9 @@ public class myAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
 
     //---------- method triggered when a change to the database is made ----------
     public void updateResults(RealmResults<Drop> newResults) {
+        myRealm.beginTransaction();
         myResults = newResults;
+        myRealm.commitTransaction();
         notifyDataSetChanged();
     }
 

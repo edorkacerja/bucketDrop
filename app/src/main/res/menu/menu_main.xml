@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_add"
+        android:icon="@drawable/ic_action_add"
+        app:showAsAction="always"
+        android:title="Add"/>
+    <item
+        android:id="@+id/action_sort_descending_date" android:title="Most time left"/>
+    <item android:id="@+id/action_sort_ascending_date" android:title="Least time left"/>
+    <item android:id="@+id/action_show_complete" android:title="Complete"/>
+    <item android:id="@+id/action_show_incomplete" android:title="Incomplete"/>
+
+</menu>
