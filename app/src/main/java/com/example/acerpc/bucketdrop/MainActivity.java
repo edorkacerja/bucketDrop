@@ -1,5 +1,6 @@
 package com.example.acerpc.bucketdrop;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -71,9 +72,10 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
 
 
 
-        // ----- Query the realm database to get all items ------
+        // ----- Query the realm database to load the items ------
         realm = Realm.getDefaultInstance();
-        resultz = realm.where(Drop.class).findAllAsync();
+        int filterOption = load();
+        loadResults(filterOption);
 
 
 
@@ -113,38 +115,31 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        RealmQuery<Drop> query = realm.where(Drop.class);
-        for(Drop d : resultz){
-            System.out.println(d.isCompleted());
-        }
+        boolean handled = true;
+        int selection = Filter.NONE;
         switch (item.getItemId()){
             case R.id.action_add:
-                Log.d(myAdapter.TAG, "onOptionsItemSelected: action add");
                 addDropButton(toolbar);
-                return true;
+                break;
             case R.id.action_show_complete:
-                Log.d(myAdapter.TAG, "onOptionsItemSelected: show complete");
-                this.resultz = query.equalTo("completed", true).findAllAsync();
-                resultz.addChangeListener(myRealmChangeListener);
-                return true;
+                selection = Filter.COMPLETE;
+                break;
             case R.id.action_show_incomplete:
-                Log.d(myAdapter.TAG, "onOptionsItemSelected: show incomplete");
-                resultz = query.equalTo("completed", false).findAllAsync();
-                resultz.addChangeListener(myRealmChangeListener);
-                return true;
+                selection = Filter.INCOMPLETE;
+                break;
             case R.id.action_sort_ascending_date:
-                Log.d(myAdapter.TAG, "onOptionsItemSelected: sort ascending");
-                resultz = query.findAllSortedAsync("goalTime");
-                resultz.addChangeListener(myRealmChangeListener);
-                return true;
+                selection = Filter.LEAST_TIME_LEFT;
+                break;
             case R.id.action_sort_descending_date:
-                Log.d(myAdapter.TAG, "onOptionsItemSelected: sort descending");
-                resultz = query.findAllSortedAsync("goalTime", Sort.DESCENDING);
-                resultz.addChangeListener(myRealmChangeListener);
-                return true;
+                selection = Filter.MOST_TIME_LEFT;
+                break;
+            default:
+                handled = false;
+                break;
         }
-        return super.onOptionsItemSelected(item);
-
+        save(selection);
+        loadResults(selection);
+        return handled;
     }
 
     @Override
@@ -158,6 +153,47 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
         super.onDestroy();
         realm.close();
     }
+
+
+    private void save(int filterOption){
+        SharedPreferences mySharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = mySharedPreferences.edit();
+        editor.putInt("filter", filterOption);
+        editor.apply();
+    }
+
+
+    private int load(){
+        SharedPreferences mySharedPreferences = getPreferences(MODE_PRIVATE);
+        return mySharedPreferences.getInt("filter", Filter.NONE);
+    }
+
+    private void loadResults(int filterOption) {
+        RealmQuery<Drop> query = realm.where(Drop.class);
+        switch (filterOption) {
+            case Filter.NONE:
+                resultz = query.findAllAsync();
+                break;
+            case Filter.COMPLETE:
+                resultz = query.equalTo("completed", true).findAllAsync();
+                break;
+            case Filter.INCOMPLETE:
+                resultz = query.equalTo("completed", false).findAllAsync();
+                break;
+            case Filter.LEAST_TIME_LEFT:
+                resultz = query.findAllSortedAsync("goalTime");
+                break;
+            case Filter.MOST_TIME_LEFT:
+                resultz = query.findAllSortedAsync("goalTime", Sort.DESCENDING);
+                break;
+            default:
+                break;
+        }
+        resultz.addChangeListener(myRealmChangeListener);
+
+    }
+
+
 
     // ----------------- Loading background image -----------------
     private void initBackgroundImg() {
