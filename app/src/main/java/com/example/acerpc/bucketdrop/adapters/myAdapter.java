@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.acerpc.bucketdrop.AppRealm;
+import com.example.acerpc.bucketdrop.Filter;
 import com.example.acerpc.bucketdrop.R;
 import com.example.acerpc.bucketdrop.beans.Drop;
 import com.example.acerpc.bucketdrop.extras.Util;
@@ -23,16 +25,22 @@ import io.realm.RealmResults;
 
 public class myAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements SwipeListener {
     public static final int ITEM = 0;
-    public static final int FOOTER = 1;
+    public static final int NO_ITEMS = 1;
+    public static final int FOOTER = 2;
+    public static final int COUNT_FOOTER = 1;
+    public static final int COUNT_EMPTY = 1;
     private LayoutInflater myLayoutInflater;
     public static final String TAG = "Edor";
+    private int filterOption;
     private RealmResults<Drop> myResults;
     myItemViewHolder myItemHolder;
     myFooterViewHolder myFooterHolder;
     Realm myRealm;
     ItemClickListener myClickListener;
+    Context myContext;
 
     public myAdapter(Context context, Realm realm, RealmResults<Drop> results, ItemClickListener listener) {
+        myContext = context;
         myLayoutInflater = LayoutInflater.from(context);
         myRealm = realm;
         updateResults(results);
@@ -45,16 +53,29 @@ public class myAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
         myRealm.beginTransaction();
         myResults = newResults;
         myRealm.commitTransaction();
+        filterOption = AppRealm.load(myContext);
         notifyDataSetChanged();
     }
 
 
     @Override
     public int getItemViewType(int position) {
-        if (myResults == null || position < myResults.size()) {
-            return ITEM;
+        if (!myResults.isEmpty()) {
+            if (position < myResults.size()){
+                return ITEM;
+            } else {
+                return FOOTER;
+            }
         } else {
-            return FOOTER;
+            if (filterOption == Filter.NONE || filterOption == Filter.LEAST_TIME_LEFT || filterOption == Filter.MOST_TIME_LEFT){
+                return ITEM;
+            } else {
+                if (position == 0){
+                    return NO_ITEMS;
+                } else {
+                    return FOOTER;
+                }
+            }
         }
     }
 
@@ -62,8 +83,10 @@ public class myAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == ITEM) {
             return new myItemViewHolder(myLayoutInflater.inflate(R.layout.single_row_drop, parent, false));
-        } else {
+        } else if (viewType == FOOTER){
             return new myFooterViewHolder(myLayoutInflater.inflate(R.layout.footer, parent, false));
+        } else {
+            return new myEmptyViewHolder(myLayoutInflater.inflate(R.layout.no_item, parent, false));
         }
     }
 
@@ -80,11 +103,14 @@ public class myAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
 
     @Override
     public int getItemCount() {
-
-        if (myResults == null) {
-            return 0;
+        if (!myResults.isEmpty()) {
+            return myResults.size() + COUNT_FOOTER;
         } else {
-            return myResults.size() + 1;
+            if (filterOption == Filter.NONE || filterOption == Filter.MOST_TIME_LEFT || filterOption == Filter.LEAST_TIME_LEFT) {
+                return 0;
+            } else {
+                return COUNT_EMPTY + COUNT_FOOTER;
+            }
         }
     }
 
@@ -144,6 +170,13 @@ public class myAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
             myButton = (Button) itemView.findViewById(R.id.btn_footer_add);
         }
 
+    }
+
+
+    class myEmptyViewHolder extends RecyclerView.ViewHolder {
+        public myEmptyViewHolder(View itemView) {
+            super(itemView);
+        }
     }
 
 }

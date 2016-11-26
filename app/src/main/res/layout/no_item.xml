@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/row_drop_layout"
+    android:gravity="center"
+    android:text="No views to display"
+    android:id="@+id/no_items_to_display"
+    android:paddingTop="24dp"
+    android:paddingBottom="24dp"
+    />

@@ -1,6 +1,5 @@
 package com.example.acerpc.bucketdrop;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -74,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
 
         // ----- Query the realm database to load the items ------
         realm = Realm.getDefaultInstance();
-        int filterOption = load();
+        int filterOption = AppRealm.load(this);
         loadResults(filterOption);
 
 
@@ -106,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
         resultz.addChangeListener(myRealmChangeListener);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -120,6 +118,9 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
         switch (item.getItemId()){
             case R.id.action_add:
                 addDropButton(toolbar);
+                break;
+            case R.id.action_sort_none:
+                selection = Filter.NONE;
                 break;
             case R.id.action_show_complete:
                 selection = Filter.COMPLETE;
@@ -137,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
                 handled = false;
                 break;
         }
-        save(selection);
+        AppRealm.save(this, selection);
         loadResults(selection);
         return handled;
     }
@@ -154,19 +155,6 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
         realm.close();
     }
 
-
-    private void save(int filterOption){
-        SharedPreferences mySharedPreferences = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor editor = mySharedPreferences.edit();
-        editor.putInt("filter", filterOption);
-        editor.apply();
-    }
-
-
-    private int load(){
-        SharedPreferences mySharedPreferences = getPreferences(MODE_PRIVATE);
-        return mySharedPreferences.getInt("filter", Filter.NONE);
-    }
 
     private void loadResults(int filterOption) {
         RealmQuery<Drop> query = realm.where(Drop.class);
