@@ -63,7 +63,7 @@ public class DialogAdd extends DialogFragment implements View.OnClickListener {
 
         Realm realm = Realm.getDefaultInstance();
 
-        Drop myDrop = new Drop(false, dropName.getText().toString(), timeCreated, 0);
+        Drop myDrop = new Drop(false, dropName.getText().toString(), timeCreated, 0); //TODO: Change timeCreated into time Specified by datePicker widget;
 
         realm.beginTransaction();
         realm.copyToRealm(myDrop);

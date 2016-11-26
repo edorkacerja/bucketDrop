@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements ItemClickListener
         myRecyclerView.hideIfEmpty(toolbar);
         myRecyclerView.showIfEmpty(emptyView);
         mAdapter = new myAdapter(this, realm, resultz, this);
+        mAdapter.setHasStableIds(true);
         myRecyclerView.setAdapter(mAdapter);
         mLayoutManager = new LinearLayoutManager(this);
         myRecyclerView.setLayoutManager(mLayoutManager);

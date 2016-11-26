@@ -16,6 +16,10 @@ import com.example.acerpc.bucketdrop.R;
 import com.example.acerpc.bucketdrop.beans.Drop;
 import com.example.acerpc.bucketdrop.extras.Util;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -38,6 +42,14 @@ public class myAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
     Realm myRealm;
     ItemClickListener myClickListener;
     Context myContext;
+
+    @Override
+    public long getItemId(int position) {
+        if (position<myResults.size()){
+            return myResults.get(position).getTimeCreated();
+        }
+        return RecyclerView.NO_ID;
+    }
 
     public myAdapter(Context context, Realm realm, RealmResults<Drop> results, ItemClickListener listener) {
         myContext = context;
@@ -96,6 +108,10 @@ public class myAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
             myItemHolder = (myItemViewHolder) holder;
             Drop myDrop = myResults.get(position);
             myItemHolder.myTxtView.setText(myDrop.getGoal());
+            Date date=new Date(myDrop.getGoalTime());
+            Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String s = formatter.format(date);
+            myItemHolder.myDate.setText(s);
             myItemHolder.setBackgroud(myDrop.isCompleted());
         }
 
@@ -134,6 +150,7 @@ public class myAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
     // ----------- my custom viewholder class -----------
     private class myItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView myTxtView;
+        private TextView myDate;
         Context context;
         View myItemView;
 
@@ -141,6 +158,7 @@ public class myAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
             super(itemView);
             context = itemView.getContext();
             myTxtView = (TextView) itemView.findViewById(R.id.recycler_drop_name);
+            myDate = (TextView) itemView.findViewById(R.id.drop_date);
             itemView.setOnClickListener(this);
             myItemView = itemView;
         }
