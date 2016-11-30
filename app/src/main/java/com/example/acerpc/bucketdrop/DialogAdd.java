@@ -7,10 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.example.acerpc.bucketdrop.beans.BucketPickerView;
 import com.example.acerpc.bucketdrop.beans.Drop;
 
 import io.realm.Realm;
@@ -24,11 +24,16 @@ public class DialogAdd extends DialogFragment implements View.OnClickListener {
     Button add;
     ImageButton close;
     EditText dropName;
-    DatePicker myDatePicker;
+    BucketPickerView myBucketPicker;
     public DialogAdd(){
 
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogTheme);
+    }
 
     @Nullable
     @Override
@@ -42,6 +47,7 @@ public class DialogAdd extends DialogFragment implements View.OnClickListener {
         add = (Button) view.findViewById(R.id.btn_add_drop);
         close = (ImageButton) view.findViewById(R.id.btn_close_dialog);
         dropName = (EditText) view.findViewById(R.id.drop_name);
+        myBucketPicker = (BucketPickerView) view.findViewById(R.id.date_picker);
         close.setOnClickListener(this);
         add.setOnClickListener(this);
     }
@@ -60,10 +66,8 @@ public class DialogAdd extends DialogFragment implements View.OnClickListener {
 
     private void addDrop() {
         long timeCreated = System.currentTimeMillis();
-
         Realm realm = Realm.getDefaultInstance();
-
-        Drop myDrop = new Drop(false, dropName.getText().toString(), timeCreated, 0); //TODO: Change timeCreated into time Specified by datePicker widget;
+        Drop myDrop = new Drop(false, dropName.getText().toString(), myBucketPicker.getTime(), timeCreated);
 
         realm.beginTransaction();
         realm.copyToRealm(myDrop);

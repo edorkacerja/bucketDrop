@@ -6,4 +6,5 @@
     <color name="bg_drop_completed">#ED8E79BB</color>
     <color name="bg_drop_row_dark">#BD8E79BB</color>
     <color name="bg_drop_row_light">#6D8E79BB</color>
+    <color name="purple">#D37AFF</color>
 </resources>

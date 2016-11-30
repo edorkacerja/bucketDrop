@@ -148,7 +148,7 @@ public class myAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
 
 
     // ----------- my custom viewholder class -----------
-    private class myItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class myItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView myTxtView;
         private TextView myDate;
         Context context;

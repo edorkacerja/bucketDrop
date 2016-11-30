@@ -29,14 +29,18 @@ public class DialogMark extends DialogFragment {
         public void onClick(View v) {
             switch(v.getId()) {
                 case R.id.btn_complete:
-
                     markAsComplete();
-
                     break;
             }
             dismiss();
         }
     };
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogTheme);
+    }
 
     private void markAsComplete() {
         Bundle arguments = getArguments();

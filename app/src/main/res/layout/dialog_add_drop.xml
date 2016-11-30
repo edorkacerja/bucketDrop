@@ -13,9 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:orientation="horizontal"
-        android:layout_weight="1">
-
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/textView3"
@@ -30,29 +29,26 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:srcCompat="@android:drawable/btn_dialog" />
-
-
     </LinearLayout>
 
     <EditText
         android:id="@+id/drop_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="What is it?"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:hint="What is it?" />
 
-    <DatePicker
+    <com.example.acerpc.bucketdrop.beans.BucketPickerView
         android:id="@+id/date_picker"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5"
-        />
+        android:layout_weight="5" />
 
     <Button
         android:id="@+id/btn_add_drop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add it"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:text="Add it" />
 
 </LinearLayout>
